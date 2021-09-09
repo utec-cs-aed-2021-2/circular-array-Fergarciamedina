@@ -12,10 +12,7 @@ private:
 public:
     CircularArray();
     CircularArray(int _capacity);
-    
-    // Default destructor
     virtual ~CircularArray();
-    
     void push_front(T data);
     void push_back(T data);
     void insert(T data, int pos);
@@ -30,11 +27,23 @@ public:
     void sort();
     bool is_sorted();
     CircularArray *reverse();
+    string to_string();
 
 private:
     int next(int);
     int prev(int);
 };
+
+
+template <class T>
+string CircularArray<T>::to_string()
+{
+    string result ="";
+    for (int i = 0; i < size(); i++)
+        result += std::to_string((*this)[i]) + " ";
+    return result;
+}
+
 
 template <class T>
 CircularArray<T>::CircularArray()
@@ -57,6 +66,14 @@ CircularArray<T>::~CircularArray()
 }
 
 template <class T>
+T &CircularArray<T>::operator[](int index){
+    if (index>=capacity){
+        exit(0);
+    }
+    return *(this->array + index); 
+}
+
+template <class T>
 int CircularArray<T>::prev(int index)
 {
     return (index == 0) ? capacity - 1 : index - 1;
@@ -66,14 +83,6 @@ template <class T>
 int CircularArray<T>::next(int index)
 {
     return (index + 1) % capacity;
-}
-
-template <class T>
-T &CircularArray<T>::operator[](int index){
-    if (index>=capacity){
-        exit(0);
-    }
-    return *(this->array + index); 
 }
 
 template <class T>
@@ -101,6 +110,13 @@ bool CircularArray<T>::is_full()
     return front == next(back) && !is_empty();
 }
 
+template <class T>
+void CircularArray<T>::display()
+{
+    for (int i = 0; i < size(); i++)
+        cout << (*this)[i] << ",";
+    cout << endl;
+}
 
 template <class T>
 void CircularArray<T>::push_front(T data){
@@ -119,9 +135,20 @@ void CircularArray<T>::push_front(T data){
             *(this->array + this->next(temp)) = *(this->array + temp);
             temp = prev(temp);
         }
-        // when temp == front
         *(this->array+this->front) =  data;
     }
+
+    if ((*this)[0] > (*this)[1])
+    {
+        int zzz = (*this)[0];
+        for (int i = 0; i < size()-1; i++){
+            (*this)[i] = (*this)[i+1];
+            //cout << (*this)[i] << endl;
+        }
+        (*this)[size()-1] = zzz;
+
+    }
+
 }
 
 template <class T>
@@ -144,7 +171,7 @@ void CircularArray<T>::push_back(T data)
 template <class T>
 T CircularArray<T>::pop_front(){
     if(is_empty()){
-        cout<<"Cola vacia"<<endl;
+        cout<<"queue empty"<<endl;
         return 0;
     }
     int temp = *(this -> array + this -> front);
@@ -161,10 +188,10 @@ T CircularArray<T>::pop_front(){
 template <class T>
 T CircularArray<T>::pop_back(){
     if(is_empty()){
-        cout<<"Cola vacia"<<endl;
+        cout<<"queue empty"<<endl;
         return 0;
     }
-    int temp = *(this -> array + this->back);
+    int temp = *(this -> array + this -> back);
     *(this -> array + this->back) = -1;
     if (front == back){
         front = back = -1;
@@ -185,15 +212,26 @@ void CircularArray<T>::clear(){
 
 template<class T> 
 CircularArray<T> *CircularArray<T>::reverse(){
-    CircularArray<int>* newArray = new CircularArray<int>(capacity);
-    int first = front;
-    while(first!=back){
-        newArray->push_front(*(this->array + first));
-        first = next(first);
+    if (size()%2 == 0)
+    {
+        for (int i = 0; i < size()/2; ++i)
+        {
+            swap((*this)[i], (*this)[size()-1-i]);
+        }
+        //display();
+        //cout << "par" << endl;
     }
-    newArray->push_front(*(this->array + back));
-    return newArray;
+    else
+    {
+        for (int i = 0; i < (size()-1)/2; ++i)
+        {
+            swap((*this)[i], (*this)[size()-1-i]);
+        }
+        //display();
+        //cout << "impar" << endl;
+    }
 }
+
 
 template<class T> 
 void CircularArray<T>::sort(){
@@ -214,6 +252,17 @@ void CircularArray<T>::sort(){
             }
         actual = next(actual);
         }while(next(actual) != next(back));
+        
+        if ((*this)[0] > (*this)[1])
+        {
+            int zzz = (*this)[0];
+            for (int i = 0; i < size()-1; i++){
+                (*this)[i] = (*this)[i+1];
+                //cout << (*this)[i] << endl;
+            }
+            (*this)[size()-1] = zzz;
+
+        }
     }
 
 }
@@ -223,15 +272,18 @@ bool CircularArray<T>::is_sorted(){
     int first = front;
     int last = back;
     if (first == last){
+        //cout << "is sorted"<< endl;
         return true;
     }
     int pivote = first;
     while (++pivote != last){
         if (*(this -> array + pivote)<*(this->array + first)){
+            //cout << "is not sorted"<< endl;
             return false;
         }
         ++first;
     }
+    //cout << "is sorted"<< endl;
     return true;
 }
 
@@ -273,12 +325,4 @@ void CircularArray<T>::insert(T data, int pos){
         }
     }   
 
-}
-
-template <class T>
-void CircularArray<T>::display()
-{
-    for (int i = 0; i < size(); i++)
-        cout << (*this)[i] << ",";
-    cout << endl;
 }
