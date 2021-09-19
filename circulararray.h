@@ -157,6 +157,8 @@ void CircularArray<T>::push_back(T data)
     if(is_full()){
         cout<<"Array full"<<endl;
         return;
+        /*ACL: Se debería implementar resizing*/
+        
     }
     else if(is_empty()){
         this->front = this->back = 0;
@@ -230,6 +232,7 @@ CircularArray<T> *CircularArray<T>::reverse(){
         //display();
         //cout << "impar" << endl;
     }
+    /*ACL: debería retornar un nuevo circular array, no invertir el actual*/
 }
 
 
@@ -292,6 +295,7 @@ void CircularArray<T>::insert(T data, int pos){
     if (is_full()){
         cout<<"Array full"<<endl;
         return;
+        /*ACL: Se debería implementar resizing*/
     }
     else if (is_empty()){
         if (pos!=0){
