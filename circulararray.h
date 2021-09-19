@@ -232,7 +232,7 @@ CircularArray<T> *CircularArray<T>::reverse(){
         //display();
         //cout << "impar" << endl;
     }
-    /*ACL: debería retornar un nuevo circular array, no invertir el actual*/
+    /*ACL: cambiar a void*/
 }
 
 
